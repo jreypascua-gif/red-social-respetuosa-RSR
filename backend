@@ -1,0 +1,53 @@
+// --- MINI RED SOCIAL INTERACTIVA ---
+
+const readline = require("readline");
+
+// la memoria donde se guardan los mensajes
+const memoria = [];
+
+// cerebro: decide si un mensaje se guarda
+function enviarMensaje(texto) {
+  const palabrotas = ["mala", "feo"];
+  
+  for (let palabra of palabrotas) {
+    if (texto.includes(palabra)) {
+      return "Mensaje rechazado 😡";
+    }
+  }
+  
+  const mensaje = { texto: texto, fecha: new Date() };
+  memoria.push(mensaje);
+  return "Mensaje guardado ✅";
+}
+
+// función para mostrar todos los mensajes
+function verMensajes() {
+  if (memoria.length === 0) {
+    console.log("No hay mensajes aún 😴\n");
+    return;
+  }
+  console.log("\n--- Mensajes ---");
+  memoria.forEach((m, i) => {
+    console.log(`${i + 1}. ${m.texto} (${m.fecha.toLocaleString()})`);
+  });
+  console.log("----------------\n");
+}
+
+// INTERFAZ PARA INTERACTUAR
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+function pedirMensaje() {
+  rl.question("Escribe tu mensaje: ", (mensaje) => {
+    const resultado = enviarMensaje(mensaje);
+    console.log(resultado);
+    verMensajes();
+    pedirMensaje(); // llama otra vez para seguir escribiendo
+  });
+}
+
+// EMPIEZA EL JUEGO
+console.log("¡Bienvenido a tu mini-red social!\n");
+pedirMensaje();
